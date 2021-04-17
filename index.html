@@ -28,7 +28,24 @@
           <div class="panel-heading">
             <h3 class="panel-title">Demographic Info</h3>
           </div>
-          <div id="sample-metadata" class="panel-body"></div>
+          <!-- <div id="sample-metadata" class="panel-body"></div> -->
+        <div class="row">
+          <div class="col-md-12">
+            <table id="sample-metadata" class="panel-body">    
+              <thead>
+                <tr>
+                  <th></th>
+                  <!-- <th>ethnicity:</th>
+                  <th>gender:</th>
+                  <th>age:</th>
+                  <th>location</th>
+                  <th>bbtype:</th>
+                  <th>wfreq:</th> -->
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="col-md-5">
@@ -41,15 +58,17 @@
     <div class="row">
       <div class="col-md-12">
         <div id="bubble"></div>
+        <div id="plot"></div>
+
       </div>
     </div>
   </div>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="./static/js/app.js"></script>
+  <script src="app.js"></script>
   <!-- <script src="./static/js/bonus.js"></script> -->
-  <!-- <script src="samples.json"></script> -->
+  <script src="samples.json"></script>
   
 </body>
 
