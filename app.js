@@ -51,9 +51,17 @@ function updatePlotly() {
 // Starter code from Terra(TA)
 function optionChanged(userValue) {
     console.log(userValue);
-    // return userValue
+    
     // Prevent the page from refreshing
     d3.event.preventDefault();
+
+    // Clear the input value
+    // d3.select("#selDataset").node().value = "";
+    
+    // Select input value from form
+    // let id_value = d3.select("#selDataset").node.value;
+    // console.log(id_value);
+
 
     d3.json('samples.json').then(data => {
         createCharts(data, userValue)
@@ -198,7 +206,7 @@ d3.json('samples.json').then(data => {
 
 });
 
-
+// Add event listener for submit button
 d3.select("#selDataset").on("click", optionChanged);
 
 init();
