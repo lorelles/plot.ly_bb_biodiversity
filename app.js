@@ -11,8 +11,10 @@ function init() {
     console.log(data)
 
     let chart = d3.selectAll("#bar").node();
+    let chart2 = d3.selectAll("#bubble").node();
 
     Plotly.newPlot(chart, data);
+    Plotly.newPlot(chart2, data);
     })
 }
 
@@ -21,24 +23,42 @@ d3.selectAll("body").on("change", updatePlotly);
 
 // This function is called when a dropdown menu item is selected
 function updatePlotly() {
-  // Use D3 to select the dropdown menu
-  let dropdownMenu = d3.select("#selDataset");
-  // Assign the value of the dropdown menu option to a variable
-  let dataset = dropdownMenu.node().value;
+    // Use D3 to select the dropdown menu
+    let dropdownMenu = d3.select("#selDataset");
+    // Assign the value of the dropdown menu option to a variable
+    let dataset = dropdownMenu.node().value;
 
-  let chart = d3.selectAll("#plot").node();
+    let chart = d3.selectAll("#bar").node();
+    let chart2 = d3.selectAll("#bubble").node();
+
+    // Initialize x and y arrays
+    let x = [];
+    let y = [];
+
+    if ( dataset === 'data.metadata[0]') {
+        x = [data.metadata[0]];
+        y = [data.metadata[0]];
+    }
+    // else if ( dataset === '') {
+
+    // }
+
+    Plotly.restyle("bar", "x", [x]);
+    Plotly.restyle("bar", "y", [y]);
 
 }
 
 // Starter code from Terra(TA)
 function optionChanged(userValue) {
     console.log(userValue);
+    // return userValue
     // Prevent the page from refreshing
     d3.event.preventDefault();
 
     d3.json('samples.json').then(data => {
         createCharts(data, userValue)
     });
+    return userValue
 }
 
 function createCharts(data, value) {
@@ -97,43 +117,68 @@ function buildPlot(data, len) {
         getBacteriaData();
 
     // Set variables for charts
-    let value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b),
-    let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b),
-    let text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b),
+    let value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b);
+    let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+    let text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b);
+    let color_otu = data.samples[0].otu_ids.slice(0,10).sort((a,b) => a-b);
 
-    
-        // Bar Chart
-
-    // let layout = {
-    //     // title: "Bacteria",
-    //     // yaxis: { title: "OTU ID"},
-    //     // xaxis: { title: "Bacteria"},
-    //     margin: {
-    //         l: 100,
-    //         r: 100,
-    //         t: 100,
-    //         b: 100
-    //       }      
-    // };
-
+    // Bar Chart
     let trace1 = {
         type: 'bar',
-        x: data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b),
-        y: data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b),
-        text: data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b),
+        x: value_otu,
+        y: label_otu,
+        text: text_otu,
         orientation: 'h'
-      };
+    };
+
+    let layout = {
+        // title: "Bacteria",
+        // yaxis: { title: "OTU ID"},
+        // xaxis: { title: "Bacteria"},
+        margin: {
+            l: 100,
+            r: 100,
+            t: 100,
+            b: 100
+        }      
+    };
       
     let plotData = [trace1]
 
     
     let chart = d3.selectAll("#bar").node;
 
-    Plotly.newPlot("bar", plotData);
+    Plotly.newPlot("bar", plotData, layout);
 
     // Bubble Chart
+    let trace2 = {
+        x: label_otu,
+        y: value_otu,
+        text: [text_otu],
+        mode: 'markers',
+        marker: {
+            color: [color_otu],
+            // size: [value_otu],
+            // color: ['rgb(44, 160, 101)'],
+            size: [40],
+            opacity: [.8]
+        },
+        type: 'scatter'
+    };
 
+    let plotData2 = [trace2];
+    let layout2 = {
+        title: 'OTU ID',
+        showlegend: false,
+        height: 500,
+        width: 800
+    };
 
+    console.log(value_otu);
+
+    let chart2 = d3.selectAll("#bubble").node;
+
+    Plotly.newPlot("bubble", plotData2, layout2);
 
     })
 }
