@@ -19,14 +19,15 @@ function init() {
 }
 
 // Call updatePlotly() when a change takes place to the DOM
-d3.selectAll("body").on("change", updatePlotly);
+d3.selectAll("#selDataset").on("change", updatePlotly);
 
 // This function is called when a dropdown menu item is selected
 function updatePlotly() {
     // Use D3 to select the dropdown menu
     let dropdownMenu = d3.select("#selDataset");
     // Assign the value of the dropdown menu option to a variable
-    let dataset = dropdownMenu.node().value;
+    // let dataset = dropdownMenu.node().value;
+    let dataset = dropdownMenu.property("value");
 
     let chart = d3.selectAll("#bar").node();
     let chart2 = d3.selectAll("#bubble").node();
@@ -50,45 +51,51 @@ function updatePlotly() {
 
 // Starter code from Terra(TA)
 function optionChanged(userValue) {
-    console.log(userValue);
+    // console.log(userValue);
+    d3.json('samples.json').then(data => {
+        createCharts(data, userValue)
+    });
+}
+
+function createCharts(dataset, value) {
+    // console.log(data);
+    console.log(value);
     
+    // ____Create Charts Here!____(Terra)
+
     // Prevent the page from refreshing
-    d3.event.preventDefault();
+    // d3.event.preventDefault();
+    
+    // Select input value from form
+    let id_value = d3.select("#selDataset").node().value;
+    console.log(id_value);
 
     // Clear the input value
     // d3.select("#selDataset").node().value = "";
     
-    // Select input value from form
-    // let id_value = d3.select("#selDataset").node.value;
-    // console.log(id_value);
+    // return userValue
 
+    // buildPlot(id_value);
 
-    d3.json('samples.json').then(data => {
-        createCharts(data, userValue)
-    });
-    return userValue
-}
-
-function createCharts(data, value) {
-    console.log(data);
-    console.log(value);
-
-    
-    // ____Create Charts Here!____(Terra)
 
 // From 3-5
 function getBacteriaData() {
     d3.json('samples.json').then(function(data) {
     // Grab values from the response json object to build the plots
-        let ids = (data.metadata.id);
-        let ethnicity = (data.metadata.ethnicity);
-        let gender = (data.metadata.gender);
-        let age = (data.metadata.age);
-        let location = (data.metadata.location);
-        let bbtype = (data.metadata.bbtype);
-        let wfreq = (data.metadata.wfreqq);
+        let ids = data.metadata.id;
+        let ethnicity = data.metadata.ethnicity;
+        let gender = data.metadata.gender;
+        let age = data.metadata.age;
+        let location = data.metadata.location;
+        let bbtype = data.metadata.bbtype;
+        let wfreq = data.metadata.wfreqq;
         let len = data.metadata.length;
         buildTable(data, len);
+
+        // console.log(ids);
+        // console.log(data.dataset.data);
+
+
     });
 }
 
@@ -111,7 +118,8 @@ function buildTable(data, len) {
     }
 }
 
-function buildPlot(data, len) {
+// function buildPlot(data, len) {
+function buildPlot() {
     d3.json('samples.json').then(function(data) {
         console.log(data)
         let ids = data.metadata.id;
@@ -139,6 +147,8 @@ function buildPlot(data, len) {
         orientation: 'h'
     };
 
+    let plotData = [trace1];
+
     let layout = {
         // title: "Bacteria",
         // yaxis: { title: "OTU ID"},
@@ -150,11 +160,8 @@ function buildPlot(data, len) {
             b: 100
         }      
     };
-      
-    let plotData = [trace1]
-
     
-    let chart = d3.selectAll("#bar").node;
+    // let chart = d3.selectAll("#bar").node;
 
     Plotly.newPlot("bar", plotData, layout);
 
@@ -175,6 +182,7 @@ function buildPlot(data, len) {
     };
 
     let plotData2 = [trace2];
+
     let layout2 = {
         title: 'OTU ID',
         showlegend: false,
@@ -184,7 +192,7 @@ function buildPlot(data, len) {
 
     console.log(value_otu);
 
-    let chart2 = d3.selectAll("#bubble").node;
+    // let chart2 = d3.selectAll("#bubble").node;
 
     Plotly.newPlot("bubble", plotData2, layout2);
 
@@ -198,15 +206,15 @@ buildPlot();
 
 // ________End of Terra's Code______
 d3.json('samples.json').then(data => {
-    console.log(data);
+    // console.log(data);
     createCharts(data, '940');
     // buildPlot();
 
-    console.log(data.metadata[0])
+    // console.log(data.metadata[0])
 
 });
 
 // Add event listener for submit button
-d3.select("#selDataset").on("click", optionChanged);
+d3.select("#selDataset").on("change", optionChanged);
 
 init();
