@@ -1,0 +1,438 @@
+
+// ___________Second Attempt__________
+
+// Initialize with default graph on page load:
+
+function init() {
+  d3.json('samples.json').then(data => {
+  data = [{
+      x: data.metadata[0],
+      y: data.metadata[0],
+      
+  }];
+  console.log(data)
+
+  let chart = d3.selectAll("#bar").node();
+  let chart2 = d3.selectAll("#bubble").node();
+
+  Plotly.newPlot(chart, data);
+  Plotly.newPlot(chart2, data);
+  })
+}
+
+// Call updatePlotly() when a change takes place to the DOM
+d3.selectAll("#selDataset").on("change", updatePlotly);
+
+// This function is called when a dropdown menu item is selected
+function updatePlotly() {
+  // Use D3 to select the dropdown menu
+  let dropdownMenu = d3.select("#selDataset");
+  // Assign the value of the dropdown menu option to a variable
+  // let dataset = dropdownMenu.node().value;
+  let dataset = dropdownMenu.property("value");
+
+  let chart = d3.selectAll("#bar").node();
+  let chart2 = d3.selectAll("#bubble").node();
+
+  // Initialize x and y arrays
+  let x = [];
+  let y = [];
+
+  if ( dataset === 'data.metadata[0]') {
+      x = [data.metadata[0]];
+      y = [data.metadata[0]];
+  }
+  // else if ( dataset === '') {
+
+  // }
+
+  Plotly.restyle("bar", "x", [x]);
+  Plotly.restyle("bar", "y", [y]);
+
+}
+
+// Starter code from Terra(TA)
+function optionChanged(userValue) {
+  // console.log(userValue);
+  d3.json('samples.json').then(data => {
+      createCharts(data, userValue)
+  });
+}
+
+function createCharts(dataset, value) {
+  // console.log(data);
+  console.log(value);
+  
+  // ____Create Charts Here!____(Terra)
+
+  // Prevent the page from refreshing
+  // d3.event.preventDefault();
+  
+  // Select input value from form
+  let id_value = d3.select("#selDataset").node().value;
+  console.log(id_value);
+
+  // Clear the input value
+  // d3.select("#selDataset").node().value = "";
+  
+  // return userValue
+
+  // buildPlot(id_value);
+
+
+// From 3-5
+function getBacteriaData() {
+  d3.json('samples.json').then(function(data) {
+  // Grab values from the response json object to build the plots
+      let ids = data.metadata.id;
+      let ethnicity = data.metadata.ethnicity;
+      let gender = data.metadata.gender;
+      let age = data.metadata.age;
+      let location = data.metadata.location;
+      let bbtype = data.metadata.bbtype;
+      let wfreq = data.metadata.wfreqq;
+      let len = data.metadata.length;
+      buildTable(data, len);
+
+      // console.log(ids);
+      // console.log(data.dataset.data);
+
+
+  });
+}
+
+function buildTable(data, len) {
+  let table = d3.select("#sample-metadata");
+  let tbody = table.select("tbody");
+  tbody.html("");
+
+  let trow;
+  for (let i = 0; i < len ; i++) {
+      trow = tbody.append("tr");
+      // trow.append("td").text(data.metadata[i]);
+      trow.append("td").text(data.metadata[i].name);
+      trow.append("td").text(data.metadata[i].ethnicity);
+      trow.append("td").text(data.metadata[i].gender);
+      trow.append("td").text(data.metadata[i].age);
+      trow.append("td").text(data.metadata[i].location);
+      trow.append("td").text(data.metadata[i].bbtype);
+      trow.append("td").text(data.metadata[i].wfreq);
+  }
+}
+
+// function buildPlot(data, len) {
+function buildPlot() {
+  d3.json('samples.json').then(function(data) {
+      console.log(data)
+      let ids = data.metadata.id;
+      let ethnicity = data.metadata.ethnicity;
+      let gender = data.metadata.gender;
+      let age = data.metadata.age;
+      let location = data.metadata.location;
+      let bbtype = data.metadata.bbtype;
+      let wfreq = data.metadata.wfreqq; 
+      
+      getBacteriaData();
+
+  // Set variables for charts
+  let value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b);
+  let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+  let text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b);
+  let color_otu = data.samples[0].otu_ids.slice(0,10).sort((a,b) => a-b);
+
+  // Bar Chart
+  let trace1 = {
+      type: 'bar',
+      x: value_otu,
+      y: label_otu,
+      text: text_otu,
+      orientation: 'h'
+  };
+
+  let plotData = [trace1];
+
+  let layout = {
+      // title: "Bacteria",
+      // yaxis: { title: "OTU ID"},
+      // xaxis: { title: "Bacteria"},
+      margin: {
+          l: 100,
+          r: 100,
+          t: 100,
+          b: 100
+      }      
+  };
+  
+  // let chart = d3.selectAll("#bar").node;
+
+  Plotly.newPlot("bar", plotData, layout);
+
+  // Bubble Chart
+  let trace2 = {
+      x: label_otu,
+      y: value_otu,
+      text: [text_otu],
+      mode: 'markers',
+      marker: {
+          color: [color_otu],
+          // size: [value_otu],
+          // color: ['rgb(44, 160, 101)'],
+          size: [40],
+          opacity: [.8]
+      },
+      type: 'scatter'
+  };
+
+  let plotData2 = [trace2];
+
+  let layout2 = {
+      title: 'OTU ID',
+      showlegend: false,
+      height: 500,
+      width: 800
+  };
+
+  console.log(value_otu);
+
+  // let chart2 = d3.selectAll("#bubble").node;
+
+  Plotly.newPlot("bubble", plotData2, layout2);
+
+  })
+}
+
+buildPlot();    
+  
+};
+
+
+// ________End of Terra's Code______
+d3.json('samples.json').then(data => {
+  // console.log(data);
+  createCharts(data, '940');
+  // buildPlot();
+
+  // console.log(data.metadata[0])
+
+});
+
+// Add event listener for submit button
+d3.select("#selDataset").on("change", optionChanged);
+
+init();
+
+
+
+
+
+
+
+
+// // _______First Attept_________
+
+// // /**
+// //  * Helper function to select stock data
+// //  * Returns an array of values
+// //  * @param {array} rows
+// //  * @param {integer} index
+// //  * index 0 - Names
+// //  * index 1 - Values
+// //  * index 2 - High
+// //  * index 3 - Low
+// //  * index 4 - Close
+// //  * index 5 - Volume
+// //  */
+
+// d3.json('samples.json').then( data => console.log(data) );
+
+
+// // From Terra: Build charts outside D3 loop:
+
+// //  function optionChanged(userValue) {
+// function submitHandler(userValue) {
+//     d3.json('samples.json').then(data => {
+//       buildPlot(data, userValue)
+//     //   createCharts(data, userValue)
+//     });
+//   }
+// //   function createCharts(dataset, value) {
+// //     console.log(dataset);
+// //     console.log(value);
+
+//     // Create Charts Here!
+//     function buildPlot() {
+//         d3.json('samples.json').then(function(data) {
+
+//     // From line 118
+//     // Grab values from the response json object to build the plots
+//     let name = Object.values(dataset.names);
+//     let samples = Object.values(dataset.samples);
+//     let otu_ids = Object.values(dataset.otu_ids);
+
+//     // let name = data.dataset.names;
+//     // let samples = data.dataset.sample_values;
+//     // let otu_ids = data.dataset.otu_ids;
+//     console.log(data);
+
+//     // Print the names of the columns
+//     console.log(data.dataset.column_names);
+
+//     let names = data.dataset.data.map(row => row[0]);
+//     console.log(names);
+
+
+//     // Print the data for each person
+//     console.log(data.dataset.data);
+//     let trace1 = {
+//         x: data.otu_ids,
+//         y: data.samples,
+//         type: "box",
+//         name: "Bacteria",
+//         boxpoints: "all"
+//     };
+
+//     let plotData = [trace1];
+
+//     let layout = {
+//         title: "Bacteria",
+//         xaxis: { title: "OTU ID"},
+//         yaxis: { title: "Bacteria"}
+//     };
+    
+
+//   })
+
+
+//     // __________Rest of Terra's code:
+  
+//   d3.json('samples.json').then(data => {
+//       createCharts(data, '940');
+//   });
+
+//  function unpack(rows, index) {
+//     return rows.map(function(row) {
+//       return row[index];
+//     });
+//   }
+
+// //   ___________End of Terra's code_______________
+
+// //   Use pretty pring to make data more legible
+  
+
+
+// // Attempt #1
+
+
+// // // Submit Button handler
+// // function handleSubmit(){
+// //     // Prevent page from refreshing
+// //     d3.event.prentDefault();
+
+// //     // Select input value from form
+// //     let name = d3.select("#selDataset").node.value;
+// //     console.log(name);
+
+// //     // Clear the input value
+// //     d3.select("#selDataset").node().value = "";
+    
+// //     // Builtd plot with new name
+// //     buildPlot(name);
+// // }
+
+// // function buildPlot(name) {
+
+// //     d3.json('samples.json').then(data => {
+// //         console.log(data);
+
+// //         let names = unpack(data.dataset.data, 0);
+// //         let values = unpack(data.dataset.data, 1);
+// //         buildTable(names, values);
+// //     })
+// //   };
+
+
+    
+//     // Atttempt #2
+
+//     function submitHandler(){
+//         // Prevent page from refreshing
+//         d3.event.prentDefault();
+
+//         // Select input value from form
+//         let name = d3.select("#selDataset").node.value;
+//         console.log(name);
+
+//         // Clear the input value
+//         d3.select("#selDataset").node().value = "";
+
+//         // Builtd plot with new name
+//         createCharts(name);
+//     }
+
+//     // // Grab values from the response json object to build the plots
+//     //     let name = Object.values(dataset.names);
+
+//     //     let name_sample = data.dataset.names;
+//     //     let samples = data.dataset.sample_values;
+//     //     let otu_ids = data.dataset.otu_ids;
+//     //     console.log(data);
+
+//     //     // Print the names of the columns
+//     //     console.log(data.dataset.column_names);
+
+//     //     let names = data.dataset.data.map(row => row[0]);
+//     //     console.log(names);
+    
+
+//     //     // Print the data for each person
+//     //     console.log(data.dataset.data);
+        
+
+//     // let trace1 = {
+//     //     x: data.otu_ids,
+//     //     y: data.samples,
+//     //     type: "box",
+//     //     name: "Bacteria",
+//     //     boxpoints: "all"
+//     // };
+
+//     // let plotData = [trace1];
+
+//     // let layout = {
+//     //     title: "Bacteria",
+//     //     xaxis: { title: "OTU ID"},
+//     //     yaxis: { title: "Bacteria"}
+//     // };
+
+// function init() {
+
+//     Plotly.newPlot("bar", plotData, layout);
+// }
+    
+
+// // }.catch(error => console.log(error)
+
+// // }
+
+// // let plotData = (val) => updatePlotly(createCharts(val));
+// // let buildTrace = (val) => {
+// //     let dataset = [{
+// //         values: Object.values(data[val]),
+// //         labels: Object.keys(data[val]),
+// //         type: "pie"
+// //     }];
+// //     return dataset;
+// // }
+
+
+// Plotly.newPlot("bar", plotData, layout);
+// Plotly.newPlot("plot", createCharts('name'), {height: 600,width: 800});
+
+// // Add event listener for submit button
+// d3.select("#submit").on("click", submitHandler);
+
+// // Promise Pending
+// const dataPromise = d3.json(url);
+// console.log("Data Promise: ", dataPromise);
+//     };
