@@ -1,0 +1,188 @@
+
+function init() {
+    // Use D3 to select the dropdown menu
+    let dropdownMenu = d3.select("#selDataset");
+
+    dropdownMenu
+        .append("option")
+        .text("940")
+        .property("value", 940);
+
+    // let chart = d3.selectAll("#bar").node();
+    // let chart2 = d3.selectAll("#bubble").node();
+
+    // Plotly.newPlot(chart, data);
+    // Plotly.newPlot(chart2, data);
+    // });
+
+}
+
+// Starter code from Terra(TA)
+function optionChanged(userValue) {
+    console.log(userValue)
+    d3.json('samples.json').then(data => {
+        createCharts(data, userValue);
+        buildTable(data, userValue);        
+    });
+}
+
+// function dropID() {
+//     let dropdownMenu = d3.select("#selDataset");
+//     let menuID = dropdownMenu.property("value");
+
+//     createPlots(menuID);
+// }
+   
+function buildTable(data, len) {
+    let table = d3.select("#sample-metadata");
+    let tbody = table.select("tbody");
+    tbody.html("");
+    // let len = data.metadata.length; 
+    let trow;
+    for (let i = 0; i < len; i++) {
+        trow = tbody.append("tr");
+        // trow.append("td").text(dataset.metadata[i]);
+        trow = tbody.append("tr");
+        trow.append("td").text(data.metadata[i].id);
+        trow.append("td").text(data.metadata[i].ethnicity);
+        trow.append("td").text(data.metadata[i].gender);
+        trow.append("td").text(data.metadata[i].age);
+        trow.append("td").text(data.metadata[i].location);
+        trow.append("td").text(data.metadata[i].bbtype);
+        trow.append("td").text(data.metadata[i].wfreq);
+    }
+    };
+
+function createCharts(dataset, value) {
+    console.log(dataset);
+    console.log(value);
+
+    // ____Create Charts Here!____(Terra)
+
+    let id = dataset.metadata.id;
+    let ethnicity = dataset.metadata.ethnicity;
+    let gender = dataset.metadata.gender;
+    let age = dataset.metadata.age;
+    let location = dataset.metadata.location;
+    let bbtype = dataset.metadata.bbtype;
+    let wfreq = dataset.metadata.wfreqq;
+
+    let value_otu = dataset.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
+    let label_otu = dataset.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
+    let text_otu = dataset.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
+    let color_otu = dataset.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
+
+    // let len = dataset.metadata.length;    
+
+    // function buildTable(data, len) {
+    // let table = d3.select("#sample-metadata");
+    // let tbody = table.select("tbody");
+    // tbody.html("");
+
+    // let trow;
+    // for (let i = 0; i < len; i++) {
+    //     trow = tbody.append("tr");
+    //     // trow.append("td").text(dataset.metadata[i]);
+    //     trow.append("td").text(dataset.metadata[i].name);
+    //     trow.append("td").text(dataset.metadata[i].ethnicity);
+    //     trow.append("td").text(dataset.metadata[i].gender);
+    //     trow.append("td").text(dataset.metadata[i].age);
+    //     trow.append("td").text(dataset.metadata[i].location);
+    //     trow.append("td").text(dataset.metadata[i].bbtype);
+    //     trow.append("td").text(dataset.metadata[i].wfreq);
+    // }
+    // }
+
+    // Bar Chart
+    let trace1 = {
+        type: 'bar',
+        x: value_otu,
+        y: label_otu,
+        text: text_otu,
+        orientation: 'h'
+    };
+
+    let plotData = [trace1];
+
+    let layout = {
+        margin: {
+            l: 100,
+            r: 100,
+            t: 100,
+            b: 100
+        }
+    }
+
+    Plotly.newPlot("bar", plotData, layout);
+
+    // Bubble Chart
+    let trace2 = {
+        x: label_otu,
+        y: value_otu,
+        text: [text_otu],
+        mode: 'markers',
+        marker: {
+            color: [color_otu],
+            // size: [value_otu],
+            // color: ['rgb(44, 160, 101)'],
+            size: [40],
+            opacity: [.8]
+        },
+        type: 'scatter'
+    };
+
+    let plotData2 = [trace2];
+
+    let layout2 = {
+        title: 'OTU ID',
+        showlegend: false,
+        height: 500,
+        width: 800
+    };
+
+    console.log(value_otu);
+
+    Plotly.newPlot("bubble", plotData2, layout2);
+
+};
+
+// // // ________End of Terra's Code______
+d3.json('samples.json').then(data => {
+    console.log(data);
+    createCharts(data, '940');
+    buildTable(data, '940');
+});
+
+// This function is called when a dropdown menu item is selected
+function testID() {
+//     // Use D3 to select the dropdown menu
+    let dropdownMenu = d3.select("#selDataset");
+//     // Assign the value of the dropdown menu option to a variable
+    let ids = dropdownMenu.property("value");
+
+    createPlots(ids);
+};
+
+
+// Add event listener for submit button
+d3.select("#selDataset").on("change", testID);
+
+// init()
+
+    // //     // Prevent the page from refreshing
+    // //     // d3.event.preventDefault();
+
+    // //     // Select input value from form
+    // //     let id_value = d3.select("#selDataset").node().value;
+    // //     console.log(id_value);
+
+    // //     // Clear the input value
+    // //     // d3.select("#selDataset").node().value = "";
+
+    // //     // return userValue
+
+    // //     // buildPlot(id_value);
+
+
+
+
