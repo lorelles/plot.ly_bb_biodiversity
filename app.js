@@ -5,7 +5,7 @@ d3.json("samples.json").then(data => {
     data.names.forEach(id => {
         select.append("option")
             .text(id)
-            .attr("value", id)
+            .property("value")
     });
 });
 
@@ -39,22 +39,28 @@ function createCharts(data) {
     
     // create table
     let table = d3.select("#sample-metadata");
-    let tbody = table.select("tbody");
-    // let id = data.names[0]
-    
+    let tbody = table.select("tbody");  
     tbody.html("");
+    
     let trow;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 2; i++) {
         // data.metadata[0].id.forEach(id => {
         trow = tbody.append("tr");
-        // trow.append("td").text(dataset.metadata[i]);
-        trow.append("tr").text(data.metadata[i].id);
-        trow.append("tr").text(data.metadata[i].ethnicity);
-        trow.append("tr").text(data.metadata[i].gender);
-        trow.append("tr").text(data.metadata[i].age);
-        trow.append("tr").text(data.metadata[i].location);
-        trow.append("tr").text(data.metadata[i].bbtype);
-        trow.append("tr").text(data.metadata[i].wfreq);
+        // trow.append("td").text(data.metadata[i]);
+        trow.append("tr").text("id: ").append("td").text(data.metadata[i].id);
+        // trow.append("tr").text(data.metadata[i].id);
+        trow.append("tr").text("ethnicity: ").append("td").text(data.metadata[i].ethnicity);
+        // trow.append("tr").text(data.metadata[i].ethnicity);
+        trow.append("tr").text("gender: ").append("td").text(data.metadata[i].gender); 
+        // trow.append("tr").text(data.metadata[i].gender);
+        trow.append("tr").text("age: ").append("td").text(data.metadata[i].age);
+        // trow.append("tr").text(data.metadata[i].age);
+        trow.append("tr").text("location: ").append("td").text(data.metadata[i].location);
+        // trow.append("tr").text(data.metadata[i].location);
+        trow.append("tr").text("bbtype: ").append("td").text(data.metadata[i].bbtype);
+        // trow.append("tr").text(data.metadata[i].bbtype);
+        trow.append("tr").text("wfreq: ").append("td").text(data.metadata[i].wfreq);
+        // trow.append("tr").text(data.metadata[i].wfreq);
     };
     // });
 
@@ -70,12 +76,8 @@ function createCharts(data) {
     let plotData = [trace1];
 
     let layout = {
-        margin: {
-            l: 100,
-            r: 100,
-            t: 100,
-            b: 100
-        }
+        height: 500,
+        width: 800
     }
 
     Plotly.newPlot("bar", plotData, layout);
