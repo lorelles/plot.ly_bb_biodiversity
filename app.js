@@ -1,66 +1,62 @@
-// Set ID 940 at page load
-// let testID = "940"
 
-// Call createCharts
-// createCharts(testID);
-
-
-// make call and process return
-// d3.json("samples.json").then(data => {
-//     console.log(data.names);
-//     console.log(data.metadata[0].id);
-     
-    // // populate empty select element with dropdown list of subject's IDs
-    // let select = d3.select("#selDataset")
-    // // data.metadata[0].forEach(id => {
-    // let len = data.metadata.length;   
-    // for (let i = 0; i < len; i++) {
-    //     let id = data.names[i]
-    //     select.append("option")
-    //     .text(id)
-    //     .attr("value", id)
-    //     // .property("value", 940)
-    // }
-    // });
+// populate empty select element with dropdown list of subject's IDs
+d3.json("samples.json").then(data => {
+    let select = d3.select("#selDataset")
+    data.names.forEach(id => {
+        select.append("option")
+            .text(id)
+            .attr("value", id)
+    });
+});
 
 
 function optionChanged(userValue) {
     d3.json('samples.json').then(data => {
-      createCharts(data, userValue)
+        console.log(userValue)
+        createCharts(data, userValue)
     });
-  }
+}
 
+// buildPlot();
 function createCharts(data) {
-    
+
     // Call in data, assign to variables
     // d3.json('samples.json').then(function(data) {
-    let id = data.metadata.id;
-    let ethnicity = data.metadata.ethnicity;
-    let gender = data.metadata.gender;
-    let age = data.metadata.age;
-    let location = data.metadata.location;
-    let bbtype = data.metadata.bbtype;
-    let wfreq = data.metadata.wfreqq;
-    let len = data.metadata.length;   
- 
+
+    let id = data.names;
+    let ethnicity = data.metadata[0].ethnicity;
+    let gender = data.metadata[0].gender;
+    let age = data.metadata[0].age;
+    let location = data.metadata[0].location;
+    let bbtype = data.metadata[0].bbtype;
+    let wfreq = data.metadata[0].wfreq;
+    let len = data.names.length;
+
     let value_otu = data.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
     let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
     let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
     let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
-
-    // populate empty select element with dropdown list of subject's IDs
-    let select = d3.select("#selDataset")
-    // data.metadata[0].forEach(id => {
-    // let len = data.metadata.length;   
-    for (let i = 0; i < len; i++) {
-        let id = data.names[i]
-        select.append("option")
-        .text(id)
-        .attr("value", id)
-        // .property("value", 940)
-    }
-
-
+    
+    // create table
+    let table = d3.select("#sample-metadata");
+    let tbody = table.select("tbody");
+    // let id = data.names[0]
+    
+    tbody.html("");
+    let trow;
+    for (let i = 0; i < 5; i++) {
+        // data.metadata[0].id.forEach(id => {
+        trow = tbody.append("tr");
+        // trow.append("td").text(dataset.metadata[i]);
+        trow.append("tr").text(data.metadata[i].id);
+        trow.append("tr").text(data.metadata[i].ethnicity);
+        trow.append("tr").text(data.metadata[i].gender);
+        trow.append("tr").text(data.metadata[i].age);
+        trow.append("tr").text(data.metadata[i].location);
+        trow.append("tr").text(data.metadata[i].bbtype);
+        trow.append("tr").text(data.metadata[i].wfreq);
+    };
+    // });
 
     // Bar Chart
     let trace1 = {
@@ -109,24 +105,19 @@ function createCharts(data) {
         width: 800
     };
 
-    console.log(value_otu);
-
     Plotly.newPlot("bubble", plotData2, layout2);
 
-    
 };
-    
-// function subjID() {
-//     let dropdownMenu = d3.select("#selDataset");
-//     let ids = dropdownMenu.property("value");
-
-//     createPlots(ids);
-// }
 
 // add event listener to select element
-d3.selectAll("#selDataset").on("change", createCharts);
+d3.selectAll("#selDataset").on("change", optionChanged);
 
-
+// function buildPlot() {
+//     let name = d3.event.target.value
+//     let nameData = data.metadata.name.find(d => name == id)
+//     init(nameData);
+// }
+// init(data.metadata[0]);
 
 d3.json("samples.json").then(data => {
     createCharts(data, "940");
