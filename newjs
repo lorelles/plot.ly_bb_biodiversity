@@ -2,7 +2,7 @@ d3.json('samples.json').then(data => {
     console.log(data);
 })
 
-Plotly.d3.csv('samples.json', function(err, rows){
+Plotly.d3.json('samples.json', function(err, rows){
 
     function unpack(rows, key) {
         return rows.map(function(row) { return row[key]; });
