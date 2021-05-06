@@ -1,5 +1,7 @@
 
 // populate empty select element with dropdown list of subject's IDs
+function init() {
+
 d3.json("samples.json").then(data => {
     let select = d3.select("#selDataset")
     data.names.forEach(id => {
@@ -8,6 +10,7 @@ d3.json("samples.json").then(data => {
             .property("value", id)
     });
 });
+}
 
 // let id = "940"
 // function init() {
@@ -61,7 +64,7 @@ function createCharts(id) {
     d3.json('samples.json').then(function(data) {
         
     console.log(data);
-    let name = data[0];
+    let name = data.samples;
     // let id = data.metadata.id;
     let ethnicity = data.metadata[0].ethnicity;
     let gender = data.metadata[0].gender;
@@ -189,7 +192,7 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 // }
 
 // init(data.metadata[0]);
-// init();
+init();
 
 // d3.json("samples.json").then(data => {
 //     createCharts(data, "940");
