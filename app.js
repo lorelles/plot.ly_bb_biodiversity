@@ -1,14 +1,17 @@
 
 // populate empty select element with dropdown list of subject's IDs
 function init() {
-
+let select = d3.select("#selDataset");
 d3.json("samples.json").then(data => {
-    let select = d3.select("#selDataset")
-    data.names.forEach(id => {
+    
+    let nameSample = data.names;
+    nameSample.forEach(sample => {
         select.append("option")
-            .text(id)
-            .property("value", id)
+            .text(sample)
+            .property("value", sample)
     });
+    // createCharts("940");
+    // buildPlot("940");
 });
 }
 
@@ -52,11 +55,56 @@ d3.json("samples.json").then(data => {
 //         // buildPlot(data, userValue)
 //     });
 // }
+// create table
+function buildPlot(sample) {
+    d3.json('samples.json').then(function(data) {
+// filter data for object (Plotlyjs.com)
+let metaData = data.metadata;
+let filterSample = metaData.filter(sampleObj => sampleObj.id == sample);
+let meta = filterSample[0];
+let table = d3.select("#sample-metadata");
+let tbody = table.select("tbody");  
+tbody.html("");
+console.log(meta);
+// Filter sample objects (Plotlyjs.com)
+Object.entries(meta).forEach(([key, value]) => {
+    table.append("h5").text(`${key.toUpperCase()}: ${value}`);
+});
+});
+};
+
+
+// let trow;
+// trow = tbody.append("tr");
+// data.names.forEach(id => {
+
+// for (let i = 0; i < 2; i++) {
+    // data.names.forEach(id => {
+    // trow = tbody.append("tr");
+    // // trow.append("td").text(data.metadata[i]);
+    // trow.append("tr").text("id: ").append("td").text(id);
+
+    // // table.append("tr").text("id: ").append("td").text(data.metadata[i].id);
+    // // trow.append("tr").text(data.metadata[i].id);
+    // trow.append("tr").text("ethnicity: ").append("td").text(ethnicity);
+    // // trow.append("tr").text(data.metadata[i].ethnicity);
+    // trow.append("tr").text("gender: ").append("td").text(gender); 
+    // // trow.append("tr").text(data.metadata[i].gender);
+    // trow.append("tr").text("age: ").append("td").text(age);
+    // // trow.append("tr").text(data.metadata[i].age);
+    // trow.append("tr").text("location: ").append("td").text(location);
+    // // trow.append("tr").text(data.metadata[i].location);
+    // trow.append("tr").text("bbtype: ").append("td").text(bbtype);
+    // // trow.append("tr").text(data.metadata[i].bbtype);
+    // trow.append("tr").text("wfreq: ").append("td").text(wfreq);
+    // trow.append("tr").text(data.metadata[i].wfreq);
+// };
+
+// });
 
 
 
-// buildPlot();
-function createCharts(id) {
+function createCharts(sample) {
     // d3.json('samples.json').then(data => {
     
 
@@ -65,6 +113,9 @@ function createCharts(id) {
         
     console.log(data);
     let name = data.samples;
+    let filterSample = name.filter(sampleObj => sampleObj.id == sample);
+    let meta = filterSample[0];
+
     // let id = data.metadata.id;
     let ethnicity = data.metadata[0].ethnicity;
     let gender = data.metadata[0].gender;
@@ -85,45 +136,38 @@ function createCharts(id) {
     // console.log(text_otu);
     // console.log(color_otu);
 
-    // let select = d3.select("#selDataset")
-    // data.names.forEach(id => {
-    //     select.append("option")
-    //         .text(id)
-    //         .property("value", id)           
-    // });
-
-    // create table
-    let table = d3.select("#sample-metadata");
-    let tbody = table.select("tbody");  
-    tbody.html("");
+    // // create table
+    // let table = d3.select("#sample-metadata");
+    // let tbody = table.select("tbody");  
+    // tbody.html("");
     
-    let trow;
-    // trow = tbody.append("tr");
-    // data.names.forEach(id => {
+    // let trow;
+    // // trow = tbody.append("tr");
+    // // data.names.forEach(id => {
 
-    // for (let i = 0; i < 2; i++) {
-        // data.names.forEach(id => {
-        trow = tbody.append("tr");
-        // trow.append("td").text(data.metadata[i]);
-        trow.append("tr").text("id: ").append("td").text(id);
+    // // for (let i = 0; i < 2; i++) {
+    //     // data.names.forEach(id => {
+    //     trow = tbody.append("tr");
+    //     // trow.append("td").text(data.metadata[i]);
+    //     trow.append("tr").text("id: ").append("td").text(id);
 
-        // table.append("tr").text("id: ").append("td").text(data.metadata[i].id);
-        // trow.append("tr").text(data.metadata[i].id);
-        trow.append("tr").text("ethnicity: ").append("td").text(ethnicity);
-        // trow.append("tr").text(data.metadata[i].ethnicity);
-        trow.append("tr").text("gender: ").append("td").text(gender); 
-        // trow.append("tr").text(data.metadata[i].gender);
-        trow.append("tr").text("age: ").append("td").text(age);
-        // trow.append("tr").text(data.metadata[i].age);
-        trow.append("tr").text("location: ").append("td").text(location);
-        // trow.append("tr").text(data.metadata[i].location);
-        trow.append("tr").text("bbtype: ").append("td").text(bbtype);
-        // trow.append("tr").text(data.metadata[i].bbtype);
-        trow.append("tr").text("wfreq: ").append("td").text(wfreq);
-        // trow.append("tr").text(data.metadata[i].wfreq);
-    // };
+    //     // table.append("tr").text("id: ").append("td").text(data.metadata[i].id);
+    //     // trow.append("tr").text(data.metadata[i].id);
+    //     trow.append("tr").text("ethnicity: ").append("td").text(ethnicity);
+    //     // trow.append("tr").text(data.metadata[i].ethnicity);
+    //     trow.append("tr").text("gender: ").append("td").text(gender); 
+    //     // trow.append("tr").text(data.metadata[i].gender);
+    //     trow.append("tr").text("age: ").append("td").text(age);
+    //     // trow.append("tr").text(data.metadata[i].age);
+    //     trow.append("tr").text("location: ").append("td").text(location);
+    //     // trow.append("tr").text(data.metadata[i].location);
+    //     trow.append("tr").text("bbtype: ").append("td").text(bbtype);
+    //     // trow.append("tr").text(data.metadata[i].bbtype);
+    //     trow.append("tr").text("wfreq: ").append("td").text(wfreq);
+    //     // trow.append("tr").text(data.metadata[i].wfreq);
+    // // };
     
-    // });
+    // // });
 
     // Bar Chart
     let trace1 = {
@@ -173,11 +217,12 @@ function createCharts(id) {
     
 };
 
-function optionChanged() {
-        let select = d3.select("#selDataset");
-        let testID = select.property("value");
-        console.log(testID);
-        createCharts(testID);
+function optionChanged(userValue) {
+        // let select = d3.select("#selDataset");
+        // let testID = select.property("value");
+        // console.log(testID);
+        createCharts(userValue);
+        buildPlot(userValue);
     }
 
 
@@ -194,8 +239,8 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 // init(data.metadata[0]);
 init();
 
-// d3.json("samples.json").then(data => {
-//     createCharts(data, "940");
-// });
+d3.json("samples.json").then(data => {
+    createCharts(data, "940");
+});
 
 
