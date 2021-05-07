@@ -10,10 +10,10 @@ d3.json("samples.json").then(data => {
             .text(sample)
             .property("value", sample)
     });
-    // createCharts("940");
-    // buildPlot("940");
+    createCharts("940");
+    buildPlot("940");
 });
-}
+};
 
 // let id = "940"
 // function init() {
@@ -56,15 +56,46 @@ d3.json("samples.json").then(data => {
 //     });
 // }
 // create table
+// function buildPlot(sample) {
+//     d3.json('samples.json').then(function(data) {
+// // // filter data for object (Plotlyjs.com)
+// let metaData = data.metadata.samples;
+// let meta = metaData.filter(function (sample) {
+//  return sample.id == Number(sample);
+// });
+//  console.log(metaData);
+
+// // let meta = filterSample[0];
+// let table = d3.select("#sample-metadata");
+// let tbody = table.select("tbody");  
+// tbody.html("");
+// console.log(meta);
+// Filter sample objects (Plotlyjs.com)
+// Object.entries(meta).forEach(([key, value]) => {
+//     table.append("h5").text(`${key.toUpperCase()}: ${value}`);
+// });
+// });
+// };
+function optionChanged(userValue) {
+    // let select = d3.select("#selDataset");
+    // let testID = select.property("value");
+    // console.log(testID);
+    createCharts(userValue);
+    buildPlot(userValue);
+    console.log(userValue);
+};
+
+
+// create table
 function buildPlot(sample) {
     d3.json('samples.json').then(function(data) {
 // filter data for object (Plotlyjs.com)
-let metaData = data.metadata;
-let filterSample = metaData.filter(sampleObj => sampleObj.id == sample);
+let sampleData = data.metadata;
+let filterSample = sampleData.filter(sampleObj => sampleObj.id == sample);
 let meta = filterSample[0];
 let table = d3.select("#sample-metadata");
-let tbody = table.select("tbody");  
-tbody.html("");
+// let tbody = table.select("tbody");  
+table.html("");
 console.log(meta);
 // Filter sample objects (Plotlyjs.com)
 Object.entries(meta).forEach(([key, value]) => {
@@ -72,6 +103,7 @@ Object.entries(meta).forEach(([key, value]) => {
 });
 });
 };
+
 
 
 // let trow;
@@ -112,29 +144,34 @@ function createCharts(sample) {
     d3.json('samples.json').then(function(data) {
         
     console.log(data);
-    let name = data.samples;
-    let filterSample = name.filter(sampleObj => sampleObj.id == sample);
+    let samples = data.samples;
+    let filterSample = samples.filter(sampleObj => sampleObj.id == sample);
     let meta = filterSample[0];
-
+    console.log(meta);
     // let id = data.metadata.id;
-    let ethnicity = data.metadata[0].ethnicity;
-    let gender = data.metadata[0].gender;
-    let age = data.metadata[0].age;
-    let location = data.metadata[0].location;
-    let bbtype = data.metadata[0].bbtype;
-    let wfreq = data.metadata[0].wfreq;
-    let len = data.names.length;
+    // let ethnicity = data.metadata[0].ethnicity;
+    // let gender = data.metadata[0].gender;
+    // let age = data.metadata[0].age;
+    // let location = data.metadata[0].location;
+    // let bbtype = data.metadata[0].bbtype;
+    // let wfreq = data.metadata[0].wfreq;
+    // let len = data.names.length;
 
-    let value_otu = data.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
-    let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
-    let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
+    // let value_otu = data.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
+    // let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
+    // let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
+    // let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
+    
+    let value_otu = meta.sample_values;
+    let label_otu = meta.otu_labels;
+    let text_otu = meta.otu_labels;
     let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
     
-    console.log(name);
-    // console.log(value_otu);
-    // console.log(label_otu);
-    // console.log(text_otu);
-    // console.log(color_otu);
+    console.log(meta);
+    console.log(value_otu);
+    console.log(label_otu);
+    console.log(text_otu);
+    console.log(color_otu);
 
     // // create table
     // let table = d3.select("#sample-metadata");
@@ -217,17 +254,17 @@ function createCharts(sample) {
     
 };
 
-function optionChanged(userValue) {
-        // let select = d3.select("#selDataset");
-        // let testID = select.property("value");
-        // console.log(testID);
-        createCharts(userValue);
-        buildPlot(userValue);
-    }
+// function optionChanged(userValue) {
+//         // let select = d3.select("#selDataset");
+//         // let testID = select.property("value");
+//         // console.log(testID);
+//         createCharts(userValue);
+//         buildPlot(userValue);
+//     }
 
 
 // add event listener to select element
-d3.selectAll("#selDataset").on("change", optionChanged);
+// d3.selectAll("#selDataset").on("change", optionChanged);
 
 // function buildPlot() {
 //     let name = d3.event.target.value
@@ -239,8 +276,9 @@ d3.selectAll("#selDataset").on("change", optionChanged);
 // init(data.metadata[0]);
 init();
 
-d3.json("samples.json").then(data => {
-    createCharts(data, "940");
-});
+// d3.json("samples.json").then(data => {
+//     createCharts(data, "940");
+//     buildPlot(data, "940");
+// });
 
 
