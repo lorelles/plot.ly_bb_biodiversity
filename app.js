@@ -162,10 +162,11 @@ function createCharts(sample) {
     // let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
     // let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
     
-    let value_otu = meta.sample_values;
+    let value_otu = meta.sample_values.slice(0, 11).sort((a, b) => a - b);
     let label_otu = meta.otu_labels;
     let text_otu = meta.otu_labels;
-    let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
+    let color_otu = meta.otu_ids;
+    // .slice(0, 10).sort((a, b) => a - b);
     
     console.log(meta);
     console.log(value_otu);
@@ -232,7 +233,7 @@ function createCharts(sample) {
         mode: 'markers',
         marker: {
             color: [color_otu],
-            // size: [value_otu],
+            size: [value_otu],
             // color: ['rgb(44, 160, 101)'],
             size: [40],
             opacity: [.8]
