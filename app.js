@@ -11,208 +11,77 @@ d3.json("samples.json").then(data => {
             .property("value", sample)
     });
     createCharts("940");
-    buildPlot("940");
+    // buildPlot("940");
 });
 };
 
-// let id = "940"
-// function init() {
-    // createCharts("940");
-// }
-
-//     d3.json("samples.json").then(data => {
-//     const userValue = d3.select("#selDataset");
-
-// });
-
-//Function to get the new county when the user selects a new county
-// function userValue() {
-//     // d3.json('samples.json').then(data => {
-//     let dropdownMenu = d3.select("#selDataset");
-//     let dropID = dropdownMenu.property("value");
-
-//     createCharts(dropID);
-//     // });
-// }
-
-// function init() {
-//     d3.json('samples.json').then(data => {
-        
-//         // const userValue = d3.select("#selDataset");
-//         createCharts(data); 
-//         console.log(data);
-//         Plotly.newPlot("bar", data);
-//     });
-// };
-
-// function optionChanged(userValue) {
-//     d3.json('samples.json').then(data => {
-//         // let userValue = d3.event.target.value
-
-//         // const userValue = d3.select("#selDataset");
-//         createCharts(data, userValue); 
-//         console.log(userValue);
-//         // buildPlot(data, userValue)
-//     });
-// }
-// create table
-// function buildPlot(sample) {
-//     d3.json('samples.json').then(function(data) {
-// // // filter data for object (Plotlyjs.com)
-// let metaData = data.metadata.samples;
-// let meta = metaData.filter(function (sample) {
-//  return sample.id == Number(sample);
-// });
-//  console.log(metaData);
-
-// // let meta = filterSample[0];
-// let table = d3.select("#sample-metadata");
-// let tbody = table.select("tbody");  
-// tbody.html("");
-// console.log(meta);
-// Filter sample objects (Plotlyjs.com)
-// Object.entries(meta).forEach(([key, value]) => {
-//     table.append("h5").text(`${key.toUpperCase()}: ${value}`);
-// });
-// });
-// };
 function optionChanged(userValue) {
-    // let select = d3.select("#selDataset");
-    // let testID = select.property("value");
-    // console.log(testID);
     createCharts(userValue);
-    buildPlot(userValue);
+    // buildPlot(userValue);
     console.log(userValue);
 };
 
-
 // create table
-function buildPlot(sample) {
+function createCharts(sample) {
+    // call in data, assign to variables
     d3.json('samples.json').then(function(data) {
 // filter data for object (Plotlyjs.com)
-let sampleData = data.metadata;
-let filterSample = sampleData.filter(sampleObj => sampleObj.id == sample);
-let meta = filterSample[0];
+let metaData = data.metadata;
+let filterData = metaData.filter(sampleObj => sampleObj.id == sample);
+let meta = filterData[0];
+// build table
 let table = d3.select("#sample-metadata");
-// let tbody = table.select("tbody");  
 table.html("");
-console.log(meta);
+
 // Filter sample objects (Plotlyjs.com)
 Object.entries(meta).forEach(([key, value]) => {
-    table.append("h5").text(`${key.toUpperCase()}: ${value}`);
+    table.append("h5").text(`${key}: ${value}`);
 });
-});
-};
 
-
-
-// let trow;
-// trow = tbody.append("tr");
-// data.names.forEach(id => {
-
-// for (let i = 0; i < 2; i++) {
-    // data.names.forEach(id => {
-    // trow = tbody.append("tr");
-    // // trow.append("td").text(data.metadata[i]);
-    // trow.append("tr").text("id: ").append("td").text(id);
-
-    // // table.append("tr").text("id: ").append("td").text(data.metadata[i].id);
-    // // trow.append("tr").text(data.metadata[i].id);
-    // trow.append("tr").text("ethnicity: ").append("td").text(ethnicity);
-    // // trow.append("tr").text(data.metadata[i].ethnicity);
-    // trow.append("tr").text("gender: ").append("td").text(gender); 
-    // // trow.append("tr").text(data.metadata[i].gender);
-    // trow.append("tr").text("age: ").append("td").text(age);
-    // // trow.append("tr").text(data.metadata[i].age);
-    // trow.append("tr").text("location: ").append("td").text(location);
-    // // trow.append("tr").text(data.metadata[i].location);
-    // trow.append("tr").text("bbtype: ").append("td").text(bbtype);
-    // // trow.append("tr").text(data.metadata[i].bbtype);
-    // trow.append("tr").text("wfreq: ").append("td").text(wfreq);
-    // trow.append("tr").text(data.metadata[i].wfreq);
-// };
-
-// });
-
-
-
-function createCharts(sample) {
+// function createCharts(sample) {
     // d3.json('samples.json').then(data => {
     
-
     // Call in data, assign to variables
-    d3.json('samples.json').then(function(data) {
-        
-    console.log(data);
-    let samples = data.samples;
-    let filterSample = samples.filter(sampleObj => sampleObj.id == sample);
-    let meta = filterSample[0];
-    console.log(meta);
-    // let id = data.metadata.id;
-    // let ethnicity = data.metadata[0].ethnicity;
-    // let gender = data.metadata[0].gender;
-    // let age = data.metadata[0].age;
-    // let location = data.metadata[0].location;
-    // let bbtype = data.metadata[0].bbtype;
-    // let wfreq = data.metadata[0].wfreq;
-    // let len = data.names.length;
+    // d3.json('samples.json').then(function(data) {      
+
+    let sample_ids = data.samples;
+    let filterSampleIds = sample_ids.filter(sampleObj => sampleObj.id == sample);
+    let sampleData = filterSampleIds[0];
+    console.log(sample_ids);
 
     // let value_otu = data.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
-    // let label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
     // let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
-    // let color_otu = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
     
-    let value_otu = meta.sample_values.slice(0, 11).sort((a, b) => a - b);
-    let label_otu = meta.otu_labels;
-    let text_otu = meta.otu_labels;
-    let color_otu = meta.otu_ids;
+    let value_otu = sampleData.sample_values;
+    let sort_value_otu = value_otu.slice(0, 10).sort((a, b) => a - b);
+    let label_otu = sampleData.otu_labels;
+    let label_otu_id = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
+    // let color_otu = sampleData.otu_ids;
+    let color_otu = sampleData.otu_ids;
     // .slice(0, 10).sort((a, b) => a - b);
-    
-    console.log(meta);
-    console.log(value_otu);
+    let color_otu_id = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
+
+    let try_value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b);
+    let try_label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+    let try_text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b);
+    let try_color_otu = data.samples[0].otu_ids.slice(0,10).sort((a,b) => a-b);
+    console.log(try_value_otu);
+    console.log(try_label_otu);
+    console.log(try_text_otu);
+    console.log(try_color_otu);
+
+    console.log(sort_value_otu);
+    console.log(value_otu); 
+    console.log(label_otu_id);
     console.log(label_otu);
-    console.log(text_otu);
-    console.log(color_otu);
-
-    // // create table
-    // let table = d3.select("#sample-metadata");
-    // let tbody = table.select("tbody");  
-    // tbody.html("");
-    
-    // let trow;
-    // // trow = tbody.append("tr");
-    // // data.names.forEach(id => {
-
-    // // for (let i = 0; i < 2; i++) {
-    //     // data.names.forEach(id => {
-    //     trow = tbody.append("tr");
-    //     // trow.append("td").text(data.metadata[i]);
-    //     trow.append("tr").text("id: ").append("td").text(id);
-
-    //     // table.append("tr").text("id: ").append("td").text(data.metadata[i].id);
-    //     // trow.append("tr").text(data.metadata[i].id);
-    //     trow.append("tr").text("ethnicity: ").append("td").text(ethnicity);
-    //     // trow.append("tr").text(data.metadata[i].ethnicity);
-    //     trow.append("tr").text("gender: ").append("td").text(gender); 
-    //     // trow.append("tr").text(data.metadata[i].gender);
-    //     trow.append("tr").text("age: ").append("td").text(age);
-    //     // trow.append("tr").text(data.metadata[i].age);
-    //     trow.append("tr").text("location: ").append("td").text(location);
-    //     // trow.append("tr").text(data.metadata[i].location);
-    //     trow.append("tr").text("bbtype: ").append("td").text(bbtype);
-    //     // trow.append("tr").text(data.metadata[i].bbtype);
-    //     trow.append("tr").text("wfreq: ").append("td").text(wfreq);
-    //     // trow.append("tr").text(data.metadata[i].wfreq);
-    // // };
-    
-    // // });
+    console.log(color_otu_id);
 
     // Bar Chart
     let trace1 = {
         type: 'bar',
-        x: value_otu,
-        y: label_otu,
-        text: text_otu,
+        x: try_value_otu,
+        y: try_label_otu,
+        text: label_otu_id,
         orientation: 'h'
     };
 
@@ -227,18 +96,18 @@ function createCharts(sample) {
 
     // Bubble Chart
     let trace2 = {
-        x: label_otu,
+        x: try_color_otu,
         y: value_otu,
-        text: [text_otu],
+        text: label_otu,
         mode: 'markers',
         marker: {
             color: [color_otu],
-            size: [value_otu],
+            size: [sort_value_otu],
             // color: ['rgb(44, 160, 101)'],
             size: [40],
             opacity: [.8]
         },
-        type: 'scatter'
+        // type: 'scatter'
     };
 
     let plotData2 = [trace2];
@@ -254,7 +123,8 @@ function createCharts(sample) {
 });
     
 };
-
+// });
+// };
 // function optionChanged(userValue) {
 //         // let select = d3.select("#selDataset");
 //         // let testID = select.property("value");
@@ -264,7 +134,7 @@ function createCharts(sample) {
 //     }
 
 
-// add event listener to select element
+// // add event listener to select element
 // d3.selectAll("#selDataset").on("change", optionChanged);
 
 // function buildPlot() {
