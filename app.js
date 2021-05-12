@@ -11,77 +11,118 @@ d3.json("samples.json").then(data => {
             .property("value", sample)
     });
     createCharts("940");
-    // buildPlot("940");
+    buildPlot("940");
 });
 };
 
 function optionChanged(userValue) {
     createCharts(userValue);
-    // buildPlot(userValue);
+    buildPlot(userValue);
     console.log(userValue);
 };
 
 // create table
-function createCharts(sample) {
+function buildPlot(sample) {
     // call in data, assign to variables
     d3.json('samples.json').then(function(data) {
 // filter data for object (Plotlyjs.com)
 let metaData = data.metadata;
 let filterData = metaData.filter(sampleObj => sampleObj.id == sample);
 let meta = filterData[0];
+let wfreq = meta.wfreq;
+// let minWfreq = d3.min(data.metadata.map(sample => sample.wfreq.min))
+// let maxWfreq = d3.max(metaData.map(sample => sample.wfreq.max))
+   
 // build table
 let table = d3.select("#sample-metadata");
 table.html("");
 
-// Filter sample objects (Plotlyjs.com)
+// console.log(minWfreq);
+// console.log(maxWfreq);
+console.log(meta.wfreq);
+
+    // Guage Chart
+    let trace3 = {
+        domain: { x: [0, 1],
+        y: [0, 1] },
+        value: wfreq,
+        title: { text: "Belly Button Washing Frequency" + '<br>' + '<span style="font-size: 14px;">Scrubs per Week</span>'},
+
+        type: 'indicator',
+        mode: 'gauge+number',
+        // delta: {reference: data.metadata.wfreq.max },
+        // guage: { axis: { range: [minWfreq, maxWfreq] } ,
+        //     threshold: { line: { color: "red", width: 4 },
+        //     thickness: 0.75, vaulue: data.metadata.wfreq.max}}
+        }       
+
+    let plotData3 = [trace3];
+
+    let layout3 = {
+        height: 500,
+        width: 800,
+        margin: { t: 0, b: 0 }, 
+        automargin: true
+    };
+
+    Plotly.newPlot("gauge", plotData3, layout3);
+    // });
+    // Filter sample objects (Plotlyjs.com)
 Object.entries(meta).forEach(([key, value]) => {
     table.append("h5").text(`${key}: ${value}`);
 });
+});
+};
 
-// function createCharts(sample) {
+function createCharts(sample) {
     // d3.json('samples.json').then(data => {
     
     // Call in data, assign to variables
-    // d3.json('samples.json').then(function(data) {      
+    d3.json('samples.json').then(function(data) {      
 
-    let sample_ids = data.samples;
-    let filterSampleIds = sample_ids.filter(sampleObj => sampleObj.id == sample);
-    let sampleData = filterSampleIds[0];
-    console.log(sample_ids);
+    let samples = data.samples;
+    let filterSample = samples.filter(sampleObj => sampleObj.id == sample);
+    let sampleData = filterSample[0];
+    console.log(sampleData);
 
     // let value_otu = data.samples[0].sample_values.slice(0, 10).sort((a, b) => a - b);
     // let text_otu = data.samples[0].otu_labels.slice(0, 10).sort((a, b) => a - b);
     
-    let value_otu = sampleData.sample_values;
-    let sort_value_otu = value_otu.slice(0, 10).sort((a, b) => a - b);
-    let label_otu = sampleData.otu_labels;
-    let label_otu_id = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0, 10).sort((a, b) => a - b);
-    // let color_otu = sampleData.otu_ids;
-    let color_otu = sampleData.otu_ids;
+    let sample_value = sampleData.sample_values;
+    let sort_sample_value = sample_value.slice(0, 10).sort((a, b) => a - b);
+    let otu_label = sampleData.otu_labels;
+    let sort_label_otu = sampleData.otu_labels.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+    let otu_id = sampleData.otu_ids;
+    let sort_otu_id = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+    
+    // let sort_otu_id = sampleData.otu_ids.slice(0, 10).sort((a, b) => a - b);
+
+    
+    
     // .slice(0, 10).sort((a, b) => a - b);
-    let color_otu_id = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
+    // let color_otu_id = data.samples[0].otu_ids.slice(0, 10).sort((a, b) => a - b);
 
-    let try_value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b);
-    let try_label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
-    let try_text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b);
-    let try_color_otu = data.samples[0].otu_ids.slice(0,10).sort((a,b) => a-b);
-    console.log(try_value_otu);
-    console.log(try_label_otu);
-    console.log(try_text_otu);
-    console.log(try_color_otu);
+    // let try_value_otu = data.samples[0].sample_values.slice(0,10).sort((a, b) => a-b);
+    // let try_label_otu = data.samples[0].otu_ids.map(d => `OTU ID ${d}`).slice(0,10).sort((a, b) => a-b);
+    // let try_text_otu = data.samples[0].otu_labels.slice(0,10).sort((a,b) => a-b);
+    // let try_color_otu = data.samples[0].otu_ids.slice(0,10).sort((a,b) => a-b);
+    
+    // console.log(minWfreq);
+    // console.log(maxWfreq);
+    // console.log(try_color_otu);
 
-    console.log(sort_value_otu);
-    console.log(value_otu); 
-    console.log(label_otu_id);
-    console.log(label_otu);
-    console.log(color_otu_id);
+    // console.log(sort_value_otu);
+    // console.log(value_otu); 
+    // console.log(label_otu_id);
+    // console.log(label_otu);
+    // console.log(color_otu_id);
 
     // Bar Chart
     let trace1 = {
         type: 'bar',
-        x: try_value_otu,
-        y: try_label_otu,
-        text: label_otu_id,
+        x: sort_sample_value,
+        y: sort_otu_id,
+        text: sort_label_otu,
         orientation: 'h'
     };
 
@@ -89,37 +130,69 @@ Object.entries(meta).forEach(([key, value]) => {
 
     let layout = {
         height: 500,
-        width: 800
+        width: 500,
+        automargin: true
     }
 
     Plotly.newPlot("bar", plotData, layout);
 
     // Bubble Chart
     let trace2 = {
-        x: try_color_otu,
-        y: value_otu,
-        text: label_otu,
+        x: otu_id,
+        y: sample_value,
+        text: otu_label,
         mode: 'markers',
         marker: {
-            color: [color_otu],
-            size: [sort_value_otu],
-            // color: ['rgb(44, 160, 101)'],
-            size: [40],
+            color: otu_id,
+            size:sample_value,
             opacity: [.8]
         },
-        // type: 'scatter'
+        type: 'scatter'
     };
 
     let plotData2 = [trace2];
 
     let layout2 = {
-        title: 'OTU ID',
+        xaxis: {
+            title: 'OTU ID',
+            titlefont: {
+                family: 'Arial, sans-serif',
+                size: 18,
+                color: 'black'
+              }
+            },
         showlegend: false,
         height: 500,
-        width: 800
+        width: 800,
+        automargin: true
     };
 
     Plotly.newPlot("bubble", plotData2, layout2);
+
+//     // Guage Chart
+//     let trace3 = {
+//         domain: { x: [0, 1],
+//         y: [0, 1] },
+//         value: wfreq,
+//         title: { text: "Scrubs per Week" },
+//         type: 'indicator',
+//         mode: 'gauge+number+delta',
+//         delta: {reference: sampleData.wfreq.max },
+//         guage: { axis: { range: [minWfreq, maxWfreq] } ,
+//             threshold: { line: { color: "red", width: 4 },
+//             thickness: 0.75, vaulue: sampleData.wfreq.max}}
+//         }       
+
+//     let plotData3 = [trace3];
+
+//     let layout3 = {
+//         height: 500,
+//         width: 800,
+//         margin: { t: 0, b: 0 } 
+//         // automargin: true
+//     };
+
+//     Plotly.newPlot("guage", plotData3, layout3);
 });
     
 };

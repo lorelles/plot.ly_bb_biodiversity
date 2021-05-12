@@ -11,7 +11,7 @@
 
 <body>
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-12 jumbotron text-center">
         <h1>Belly Button Biodiversity Dashboard</h1>
@@ -23,31 +23,12 @@
         <div class="well">
           <h5>Test Subject ID No.:</h5>
           <select id="selDataset" onchange="optionChanged(this.value)"></select>
-          <!-- <select id="selDataset"></select> -->
-
         </div>
         <div class="panel panel-primary">
           <div class="panel-heading">
             <h3 class="panel-title">Demographic Info</h3>
           </div>
-          <!-- <div id="sample-metadata" class="panel-body"></div> -->
-        <div class="row">
-          <div class="col-md-12">
-            <table id="sample-metadata" class="panel-body">    
-              <thead>
-                <tr>
-                  <th></th>
-                  <!-- <th>ethnicity:</th>
-                  <th>gender:</th>
-                  <th>age:</th>
-                  <th>location</th>
-                  <th>bbtype:</th>
-                  <th>wfreq:</th> -->
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
+          <div id="sample-metadata" class="panel-body"></div>
         </div>
       </div>
       <div class="col-md-5">
@@ -56,12 +37,14 @@
       <div class="col-md-5">
         <div id="gauge"></div>
       </div>
+      </div>
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 col-md-offset-2">
         <div id="bubble"></div>
-        <!-- <div id="plot"></div> -->
-
+        <!-- <div class="text-center">
+          <h4>OTU ID</h4>
+        </div> -->
       </div>
     </div>
   </div>
@@ -71,7 +54,7 @@
   <script src="app.js"></script>
   <!-- <script src="./static/js/bonus.js"></script> -->
   <script src="samples.json"></script>
-  
+
 </body>
 
 </html>
